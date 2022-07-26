@@ -62,10 +62,6 @@ while True:
     elif event == '6':
         janela_conf = save_config()
 
-    elif event == 'exit':
-        print(windows.current_location())
-        windows.close()
-
     if janela_relogio:
         now = datetime.datetime.now()
         try:

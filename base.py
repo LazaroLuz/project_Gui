@@ -21,7 +21,6 @@ def foto_to_pdf():
     title = 'Foto Para Pdf'
     layout =[
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Frame('', [
             [
                 Sg.T('Coloque a Url: '),
@@ -43,7 +42,6 @@ def video_download():
     title = 'Download Video'
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Frame('', [
             [
                 Sg.T('Coloque a Url: '),
@@ -62,7 +60,6 @@ def relogio():
     title = 'Relogio'
     layout =[
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Push(), Sg.Text('', key='horas', font='Any 33'), Sg.Push()],
         [Sg.T('', key='data', font='Any 18')]
     ]
@@ -75,7 +72,6 @@ def registro():
     title = 'Registros de Downloads'
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [
             Sg.Table(values=[['www.quadrinhoseroticos.blog', 'ESPOSA ORIENTAL VIDA OCIDENTAL 1', '11:04:00']], headings=headings,
                      auto_size_columns=True,
@@ -100,7 +96,6 @@ def reflexao():
     title = 'Reflexão'
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.T('Muitas vezes ri dos fracotes que se creem bons porque têm patas aleijadas!',
                 size=(40, 20), justification='c', font='Any 12', key='frase')]
     ]
@@ -111,7 +106,6 @@ def save_config():
     title = 'Configuração'
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Push(), Sg.T('Add Site ao Banco de Dados'), Sg.Push()],
         [Sg.T('Site '), Sg.In(key='lsite')],
         [Sg.T('Url 1'), Sg.In(key='lurl1')],
