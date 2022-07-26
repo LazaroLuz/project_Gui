@@ -74,8 +74,4 @@ while True:
         janela_relogio['data'].update(data)
 
 
-
-
-
-
 janela.close()
