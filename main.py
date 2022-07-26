@@ -6,7 +6,9 @@ from converte import convert_to_bytes
 
 
 def main():
+    title = 'Menu Inicial'
     layout =[
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [
             Sg.Btn('', image_data=convert_to_bytes('icones/f_pdf.png', (60, 60)), key='1', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/Video_down.webp', (60, 60)), key='2', pad=(0, 0)),

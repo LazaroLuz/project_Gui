@@ -2,11 +2,25 @@ import PySimpleGUI as Sg
 from converte import convert_to_bytes
 
 
-Sg.theme('Darkblue6')
+DarkGrey8 = {'BACKGROUND': '#19232D',
+              'TEXT': '#ffffff',
+              'INPUT': '#32414B',
+              'TEXT_INPUT': '#ffffff',
+              'SCROLL': '#505F69',
+              'BUTTON': ('#ffffff', '#32414B'),
+              'PROGRESS': ('#505F69', '#32414B'),
+              'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              }
+
+Sg.theme_add_new('DarkGrey8', DarkGrey8)
+
+Sg.theme('DarkGrey8')
 
 
 def foto_to_pdf():
+    title = 'Foto Para Pdf'
     layout =[
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Frame('', [
             [
@@ -26,7 +40,9 @@ def foto_to_pdf():
 
 
 def video_download():
+    title = 'Download Video'
     layout = [
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Frame('', [
             [
@@ -43,7 +59,9 @@ def video_download():
 
 
 def relogio():
+    title = 'Relogio'
     layout =[
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Push(), Sg.Text('', key='horas', font='Any 33'), Sg.Push()],
         [Sg.T('', key='data', font='Any 18')]
@@ -54,7 +72,9 @@ def relogio():
 
 def registro():
     headings = ['Site download', 'Nome do Arquivo', 'horas']
+    title = 'Registros de Downloads'
     layout = [
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [
             Sg.Table(values=[['www.quadrinhoseroticos.blog', 'ESPOSA ORIENTAL VIDA OCIDENTAL 1', '11:04:00']], headings=headings,
@@ -77,7 +97,9 @@ def registro():
 
 
 def reflexao():
+    title = 'Reflexão'
     layout = [
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.T('Muitas vezes ri dos fracotes que se creem bons porque têm patas aleijadas!',
                 size=(40, 20), justification='c', font='Any 12', key='frase')]
@@ -86,7 +108,9 @@ def reflexao():
 
 
 def save_config():
+    title = 'Configuração'
     layout = [
+        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/exit.png', (20, 20)), key='exit')],
         [Sg.Push(), Sg.T('Add Site ao Banco de Dados'), Sg.Push()],
         [Sg.T('Site '), Sg.In(key='lsite')],
