@@ -50,7 +50,7 @@ def video_download():
             ]
         ], expand_x=True)],
         [Sg.Frame('', [
-            [Sg.Im(key='img_v', size=(300, 300))]
+            [Sg.Push(), Sg.Im(key='img_v', size=(400, 400)), Sg.Push()]
         ], expand_x=True)]
     ]
     return Sg.Window('', layout, finalize=True, location=(1369, 0), no_titlebar=True)
@@ -93,26 +93,42 @@ def registro():
 
 
 def reflexao():
+    temas_site = [
+        'Frases de Pensadores Importantes', 'Mensagens de Reflexão', 'Frases de Motivação', 'Frases Curtas',
+    'Frases de Vida', 'Frases de Amizade', 'Frases Inteligentes', 'Frases para Refletir', 'Frases Curtas de Sabedoria',
+    'Provérbio Chinês de Sabedoria', 'Sexo', 'Ousadia', 'Ódio', 'Frases de Quem Sou Eu'
+    ]
     title = 'Reflexão'
+    Frase = [
+        [Sg.Push(), Sg.T('Muitas vezes ri dos fracotes que se creem bons porque têm patas aleijadas!',
+                size=(40, 20), justification='c', font='Any 12', key='frase'), Sg.Push()]
+    ]
+    Conf_frase = [
+        [Sg.T('Tema da Frase: '), Sg.In(key='t_frase')],
+        [Sg.T('Download do Site https://www.pensador.com/')],
+        [Sg.Push(), Sg.Combo(values=temas_site, enable_events=True, p=(5, 10), key='list_tema'), Sg.Push()],
+        [Sg.VPush()],
+        [Sg.Push(), Sg.T('', key='complete'), Sg.Push()],
+        [Sg.Push(), Sg.B('Download'), Sg.Push()]
+    ]
+
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
-        [Sg.T('Muitas vezes ri dos fracotes que se creem bons porque têm patas aleijadas!',
-                size=(40, 20), justification='c', font='Any 12', key='frase')]
+        [Sg.TabGroup([[Sg.Tab('Reflexão', Frase), Sg.Tab('Frase do Site', Conf_frase)]])]
+
     ]
     return Sg.Window('', layout, finalize=True, location=(961, 170), no_titlebar=True)
 
 
 def save_config():
-    title = 'Configuração'
+    title = 'Configuração dos Sites'
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.T('Add Site ao Banco de Dados'), Sg.Push()],
         [Sg.T('Site '), Sg.In(key='lsite')],
         [Sg.T('Url 1'), Sg.In(key='lurl1')],
-        [Sg.T('Url 2'), Sg.In(key='lurl2')],
         [Sg.T('Img 1'), Sg.In(key='limg1')],
         [Sg.T('Img 2'), Sg.In(key='limg2')],
-        [Sg.T('Next '), Sg.In(key='lnext')],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/save_db.jpg', (40, 40)), key='save_db'), Sg.Push()]
     ]
     return Sg.Window('', layout, finalize=True, location=(1474, 447), no_titlebar=True)

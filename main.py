@@ -1,6 +1,6 @@
 import datetime
 import locale
-
+from cores import *
 from base import *
 from converte import convert_to_bytes
 
@@ -61,6 +61,23 @@ while True:
 
     elif event == '6':
         janela_conf = save_config()
+
+    elif event == 'baixar_video':
+        janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
+
+
+    elif event == 'Download':
+        if values['t_frase'] == '':
+            print('Campo Tema da Frase não pode esta vazio')
+        else:
+            frase_de_reflexao(values['t_frase'])
+            janela_reflexao['complete'].update('Download Realizado com Sucesso')
+    if janela_reflexao:
+        if event.startswith('list_tema'):
+            janela_reflexao['t_frase'].update(values['list_tema'])
+
+
+
 
     if janela_relogio:
         now = datetime.datetime.now()
