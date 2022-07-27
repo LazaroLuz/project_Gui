@@ -1,3 +1,4 @@
+import PyPDF2
 import httpx
 from bs4 import BeautifulSoup
 from pdf_pil import Pdf
@@ -28,24 +29,46 @@ def main(url, sel1, sel_img):
                 fotos = sp.select(sel_img)
                 texto = sp.select_one('h1').text
                 txt = tratar_texto(texto)
-                print(txt)
-                if len(fotos) >= 4:
-                    os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
-                    for foto in fotos:
-                        if foto.get('src'):
-                            comic = foto.get('src')
-                        elif foto.get('href'):
-                            comic = foto.get('href')
-                        else:
-                            comic = foto.get('data-src')
-                        # print(comic)
-                        photos.append(os.path.basename(comic))
-                        r = client.get(comic).content
-                        with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
-                            ft.write(r)
-                Pdf(f'{base.netloc}/{txt}', txt, photos)
+                try:
+                    file = open(f'{base.netloc}/{txt}.pdf', 'rb')
+                    readpdf = PyPDF2.PdfFileReader(file)
+                    totalpages = readpdf.numPages
+                    if totalpages == len(fotos):
+                        print('numero igual proximo!')
+                        continue
+                    else:
+                        os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
+                        for foto in fotos:
+                            if foto.get('src'):
+                                comic = foto.get('src')
+                            elif foto.get('href'):
+                                comic = foto.get('href')
+                            else:
+                                comic = foto.get('data-src')
+                            # print(comic)
+                            photos.append(os.path.basename(comic))
+                            r = client.get(comic).content
+                            with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
+                                ft.write(r)
+                    Pdf(f'{base.netloc}/{txt}', txt, photos)
+                except FileNotFoundError:
+                    if len(fotos) >= 4:
+                        os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
+                        for foto in fotos:
+                            if foto.get('src'):
+                                comic = foto.get('src')
+                            elif foto.get('href'):
+                                comic = foto.get('href')
+                            else:
+                                comic = foto.get('data-src')
+                            # print(comic)
+                            photos.append(os.path.basename(comic))
+                            r = client.get(comic).content
+                            with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
+                                ft.write(r)
+                    Pdf(f'{base.netloc}/{txt}', txt, photos)
             else:
-                ...
+                continue
 
 
 def procurando_next(link):
