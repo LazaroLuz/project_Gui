@@ -14,8 +14,10 @@ import re
 
 now = datetime.datetime.now()
 horas = now.strftime("%X")
+
+
 def tratar_texto(txt: str) -> str:
-    ignore = "!@#$?:;'"
+    ignore = "!@#$?:;',"
     for char in ignore:
         txt = txt.replace(char, "")
     return txt.strip().rstrip()
@@ -60,7 +62,7 @@ def coremain(janela, url, sel1, sel_img):
                             janela['revista'].update(data=converte.convert_to_bytes(r, (400, 600)))
                             with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
                                 ft.write(r)
-                        with open('../historico.csv', 'a+') as csvfile:
+                        with open('historico.csv', 'a+') as csvfile:
                             csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}//{base.netloc}{base.path}', f'{txt}', f'{horas}'])
                     Pdf(f'{base.netloc}/{txt}', txt, photos)
                 except FileNotFoundError:
@@ -73,14 +75,15 @@ def coremain(janela, url, sel1, sel_img):
                                 comic = foto.get('href')
                             else:
                                 comic = foto.get('data-src')
+                            lista_capa.append(comic)
                             photos.append(os.path.basename(comic))
                             r = client.get(comic).content
-                            # capa = client.get(photos[0]).content
-                            # janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
+                            capa = client.get(lista_capa[0]).content
+                            janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
                             janela['revista'].update(data=converte.convert_to_bytes(r, (400, 600)))
                             with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
                                 ft.write(r)
-                        with open('../historico.csv', 'a+') as csvfile:
+                        with open('historico.csv', 'a+') as csvfile:
                             csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}//{base.netloc}{base.path}', f'{txt}', f'{horas}'])
                     Pdf(f'{base.netloc}/{txt}', txt, photos)
             else:

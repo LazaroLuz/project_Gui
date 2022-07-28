@@ -2,7 +2,7 @@ import datetime
 import locale
 from cores import *
 from base import *
-from models import Comics, Reflexao, Pensamento
+from models import Comics
 from converte import convert_to_bytes
 from urllib.parse import urlparse
 
@@ -42,7 +42,7 @@ def main():
             Sg.Btn('', image_data=convert_to_bytes('icones/sair.png', (60, 60)), key='sair', pad=(0, 0))
         ]
     ]
-    return Sg.Window('Projeto', layout, keep_on_top=True, finalize=True, location=(0, 773), no_titlebar=True)
+    return Sg.Window('Projeto', layout, keep_on_top=True, finalize=True, location=(0, 773))
 
 
 janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf = main(), None, None, None, None, None, None
@@ -68,30 +68,35 @@ while True:
             janela_conf = None
 
     elif event == '1':
-        janela_foto = foto_to_pdf()
+        if not janela_foto:
+            janela_foto = foto_to_pdf()
+
     elif event == '2':
-        janela_video = video_download()
+        if not janela_video:
+            janela_video = video_download()
 
     elif event == '3':
-        janela_relogio = relogio()
+        if not janela_relogio:
+            janela_relogio = relogio()
 
     elif event == '4':
-        janela_registro = registro()
+        if not janela_registro:
+            janela_registro = registro()
 
     elif event == '5':
-        janela_reflexao = reflexao()
+        if not janela_reflexao:
+            janela_reflexao = reflexao()
 
     elif event == '6':
-        janela_conf = save_config()
+        if not janela_conf:
+            janela_conf = save_config()
 
     elif event == 'baixar_video':
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
         base = urlparse(values['url-site'])
-
         url_ = ''
-
         try:
             sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
             for p in range(1, int(values['n_pag']) + 1):
@@ -121,18 +126,22 @@ while True:
 
     elif janela_registro:
         v_base = []
-        with open('historico.csv') as csvfile:
-            for x in csv.reader(csvfile):
-                if x:
-                    v_base.append(x)
-        janela_registro['-TABLE-'].Update(values=v_base)
+        try:
+            with open('historico.csv') as csvfile:
+                for x in csv.reader(csvfile):
+                    if x:
+                        v_base.append(x)
+            janela_registro['-TABLE-'].Update(values=v_base)
+        except FileNotFoundError:
+            pass
 
     elif event == 'Download':
         if values['t_frase'] == '':
             print('Campo Tema da Frase não pode esta vazio')
         else:
-            frase_de_reflexao(values['t_frase'])
-            janela_reflexao['complete'].update('Download Realizado com Sucesso')
+            janela_reflexao.perform_long_operation(lambda: frase_de_reflexao(janela_reflexao, values['t_frase']), 'Reflexão')
+            janela_reflexao['Download'].update(disabled=True)
+            janela_reflexao['complete'].update('')
     elif event.startswith('list_tema'):
         janela_reflexao['t_frase'].update(values['list_tema'])
 

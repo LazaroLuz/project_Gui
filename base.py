@@ -9,7 +9,7 @@ DarkGrey8 = {'BACKGROUND': '#19232D',
               'SCROLL': '#505F69',
               'BUTTON': ('#ffffff', '#32414B'),
               'PROGRESS': ('#505F69', '#32414B'),
-              'BORDER': 1, 'SLIDER_DEPTH': 0, 'PROGRESS_DEPTH': 0,
+              'BORDER': 1, 'SLIDER_DEPTH': 2, 'PROGRESS_DEPTH': 2,
               }
 
 Sg.theme_add_new('DarkGrey8', DarkGrey8)
@@ -36,7 +36,7 @@ def foto_to_pdf():
             [Sg.Im(size=(400, 600), key='revista')]
         ])]
     ]
-    return Sg.Window('', layout, finalize=True, location=(0, 0), no_titlebar=True)
+    return Sg.Window('', layout, finalize=True, location=(0, 0))
 
 
 def video_download():
@@ -54,7 +54,7 @@ def video_download():
             [Sg.Push(), Sg.Im(key='img_v', size=(400, 400)), Sg.Push()]
         ], expand_x=True)]
     ]
-    return Sg.Window('', layout, finalize=True, location=(1369, 0), no_titlebar=True)
+    return Sg.Window('', layout, finalize=True, location=(1369, 0))
 
 
 def relogio():
@@ -65,7 +65,7 @@ def relogio():
         [Sg.T('', key='data', font='Any 18')]
     ]
 
-    return Sg.Window('Horas e Data', layout, finalize=True, location=(959, 0), no_titlebar=True)
+    return Sg.Window('Horas e Data', layout, finalize=True, location=(959, 0))
 
 
 def registro():
@@ -78,11 +78,11 @@ def registro():
                      auto_size_columns=True,
                      # cols_justification=('left','center','right','c', 'l', 'bad'),       # Added on GitHub only as of June 2022
                      justification='center',
-                     col_widths=[60, 60],
-                     num_rows=15,
-                     alternating_row_color='purple',
+                     # col_widths=[60, 60],
+                     # num_rows=15,
+                     # alternating_row_color='purple',
                      key='-TABLE-',
-                     selected_row_colors='red on yellow',
+                     # selected_row_colors='red on yellow',
                      enable_events=True,
                      expand_x=True,
                      expand_y=True,
@@ -90,7 +90,7 @@ def registro():
                      # enable_click_events=True,  # Comment out to not enable header and other clicks
                      tooltip='Registro de Download')],
     ]
-    return Sg.Window('', layout, finalize=True, location=(959, 614), no_titlebar=True)
+    return Sg.Window('', layout, finalize=True, location=(959, 614))
 
 
 def reflexao():
@@ -118,7 +118,7 @@ def reflexao():
         [Sg.TabGroup([[Sg.Tab('Reflexão', Frase), Sg.Tab('Frase do Site', Conf_frase)]])]
 
     ]
-    return Sg.Window('', layout, finalize=True, location=(961, 170), no_titlebar=True)
+    return Sg.Window('', layout, finalize=True, location=(961, 170))
 
 
 def save_config():
@@ -132,4 +132,4 @@ def save_config():
         [Sg.T('Img 2'), Sg.In(key='limg2')],
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/save_db.jpg', (40, 40)), key='save_db'), Sg.Push()]
     ]
-    return Sg.Window('', layout, finalize=True, location=(1474, 447), no_titlebar=True)
+    return Sg.Window('', layout, finalize=True, location=(1474, 447))
