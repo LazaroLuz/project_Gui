@@ -1,5 +1,6 @@
 import csv
 import datetime
+import shutil
 
 import PyPDF2
 import httpx
@@ -36,16 +37,45 @@ def coremain(janela, url, sel1, sel_img):
                 res = client.get(link.get('href'))
                 sp = BeautifulSoup(res.text, 'html5lib')
                 fotos = sp.select(sel_img)
-                texto = sp.select_one('h1').text
-                txt = tratar_texto(texto)
-                janela['titulo'].update(txt)
-                try:
-                    file = open(f'{base.netloc}/{txt}.pdf', 'rb')
-                    readpdf = PyPDF2.PdfFileReader(file)
-                    totalpages = readpdf.numPages
-                    if totalpages == len(fotos):
-                        continue
-                    else:
+                if fotos:
+                    texto = sp.select_one('h1').text
+                    txt = tratar_texto(texto)
+                    janela['titulo'].update(txt)
+                    try:
+                        file = open(f'{base.netloc}/{txt}.pdf', 'rb')
+                        readpdf = PyPDF2.PdfFileReader(file)
+                        totalpages = readpdf.numPages
+                        if totalpages == len(fotos):
+                            continue
+                        else:
+                            os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
+                            i = 0
+                            for foto in fotos:
+                                if foto.get('src'):
+                                    comic = foto.get('src')
+                                elif foto.get('href'):
+                                    comic = foto.get('href')
+                                else:
+                                    comic = foto.get('data-src')
+                                print(comic)
+                                lista_capa.append(comic)
+                                photos.append(os.path.basename(comic))
+                                r = client.get(comic).content
+                                try:
+                                    capa = client.get(lista_capa[0]).content
+                                    janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
+                                except:
+                                    pass
+                                janela['revista'].update(data=converte.convert_to_bytes(r, (400, 600)))
+                                with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
+                                    ft.write(r)
+                                i += 1
+                            with open('historico.csv', 'a+') as csvfile:
+                                csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}//{base.netloc}{base.path}', f'{txt}', f'{horas}'])
+
+                            Pdf(f'{base.netloc}/{txt}', txt, photos)
+                            shutil.rmtree(f'{base.netloc}/{txt}')
+                    except FileNotFoundError:
                         os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
                         for foto in fotos:
                             if foto.get('src'):
@@ -57,38 +87,25 @@ def coremain(janela, url, sel1, sel_img):
                             lista_capa.append(comic)
                             photos.append(os.path.basename(comic))
                             r = client.get(comic).content
-                            capa = client.get(lista_capa[0]).content
-                            janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
+                            try:
+                                capa = client.get(lista_capa[0]).content
+                                janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
+                            except:
+                                pass
                             janela['revista'].update(data=converte.convert_to_bytes(r, (400, 600)))
                             with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
                                 ft.write(r)
                         with open('historico.csv', 'a+') as csvfile:
                             csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}//{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                    Pdf(f'{base.netloc}/{txt}', txt, photos)
-                except FileNotFoundError:
-                    if len(fotos) >= 4:
-                        os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
-                        for foto in fotos:
-                            if foto.get('src'):
-                                comic = foto.get('src')
-                            elif foto.get('href'):
-                                comic = foto.get('href')
-                            else:
-                                comic = foto.get('data-src')
-                            lista_capa.append(comic)
-                            photos.append(os.path.basename(comic))
-                            r = client.get(comic).content
-                            capa = client.get(lista_capa[0]).content
-                            janela['capa'].update(data=converte.convert_to_bytes(capa, (400, 600)))
-                            janela['revista'].update(data=converte.convert_to_bytes(r, (400, 600)))
-                            with open(os.path.join(f'{base.netloc}/{txt}', os.path.basename(comic)), 'wb') as ft:
-                                ft.write(r)
-                        with open('historico.csv', 'a+') as csvfile:
-                            csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}//{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                    Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        shutil.rmtree(f'{base.netloc}/{txt}')
+                else:
+                    continue
             else:
                 continue
-
-
+        janela['capa'].update('', size=(400, 600))
+        janela['revista'].update('', size=(400, 600))
+        janela['baixar_revista'].update(disabled=False)
+        janela['titulo'].update('')
 
 

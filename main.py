@@ -1,17 +1,19 @@
 import datetime
 import locale
+import sched
+import time
+from random import randint
+
 from cores import *
 from base import *
-from models import Comics
+from models import Comics, Reflexao, Pensamento
 from converte import convert_to_bytes
 from urllib.parse import urlparse
 
 
 def lerbanco(site):
-    print(site)
     try:
-        comics = Comics.get(Comics.site_name == f'{site}').get()
-        print(comics.seletor_link)
+        comics = Comics.select().where(Comics.site_name == f'{site}').get()
         return comics.seletor_link, comics.seletor_img_1, comics.seletor_img_2
     except:
         Sg.PopupError('Site não está Cadastrado')
@@ -26,6 +28,13 @@ def procurando_next(link):
         texto = soup.find_all(href=not_lacie)
         return texto[-1].get('href')
 
+
+def pegarfrase():
+    r = [t.tema for t in Reflexao.select()]
+    n = randint(0, len(r)-1)
+    t = Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{r[n]}')
+    n2 = randint(0, len(t)-1)
+    return t[n2].texto
 
 
 def main():
@@ -48,7 +57,7 @@ def main():
 janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf = main(), None, None, None, None, None, None
 
 while True:
-    windows, event, values = Sg.read_all_windows(timeout=60)
+    windows, event, values = Sg.read_all_windows(timeout=1000)
 
     if event == Sg.WIN_CLOSED or event == 'sair':
         windows.close()
@@ -95,6 +104,7 @@ while True:
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
+        janela_foto['baixar_revista'].update(disabled=True)
         base = urlparse(values['url-site'])
         url_ = ''
         try:
@@ -109,7 +119,8 @@ while True:
 
                 janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
         except:
-            print('Cheguei até aqui')
+            Sg.popup_error('Ocorreu um erro')
+            janela_foto['baixar_revista'].update(disabled=False)
 
     elif event == 'save_db':
         Comics.create(
@@ -145,8 +156,9 @@ while True:
     elif event.startswith('list_tema'):
         janela_reflexao['t_frase'].update(values['list_tema'])
 
-
-
+    elif event == 'Reflexão':
+        p = pegarfrase()
+        janela_reflexao['frase'].update(p)
 
     if janela_relogio:
         now = datetime.datetime.now()

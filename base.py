@@ -101,8 +101,9 @@ def reflexao():
     ]
     title = 'Reflexão'
     Frase = [
-        [Sg.Push(), Sg.T('Muitas vezes ri dos fracotes que se creem bons porque têm patas aleijadas!',
-                size=(40, 20), justification='c', font='Any 12', key='frase'), Sg.Push()]
+        [Sg.Push(), Sg.T('', size=(40, 20), justification='c', font='Any 14', key='frase'), Sg.Push()],
+        [Sg.VPush()],
+        [Sg.Push(), Sg.B('Reflexão'), Sg.Push()]
     ]
     Conf_frase = [
         [Sg.T('Tema da Frase: '), Sg.In(key='t_frase')],
