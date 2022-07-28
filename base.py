@@ -26,7 +26,8 @@ def foto_to_pdf():
                 Sg.T('Coloque a Url: '),
                 Sg.In(key='url-site', expand_x=True),
                 Sg.B(image_data=convert_to_bytes('icones/download.png', (40, 50)), key='baixar_revista')
-            ]
+            ],
+            [Sg.T('Numero de Pagínas'), Sg.Spin(values=[i for i in range(1, 150)], initial_value=1, size=(6, 1), key='n_pag')]
         ], expand_x=True)],
         [Sg.Push(), Sg.T('', key='titulo'), Sg.Push()],
         [Sg.Frame('', [
@@ -73,7 +74,7 @@ def registro():
     layout = [
         [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [
-            Sg.Table(values=[['www.quadrinhoseroticos.blog', 'ESPOSA ORIENTAL VIDA OCIDENTAL 1', '11:04:00']], headings=headings,
+            Sg.Table(values=[], headings=headings,
                      auto_size_columns=True,
                      # cols_justification=('left','center','right','c', 'l', 'bad'),       # Added on GitHub only as of June 2022
                      justification='center',

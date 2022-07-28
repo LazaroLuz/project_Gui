@@ -2,7 +2,30 @@ import datetime
 import locale
 from cores import *
 from base import *
+from models import Comics, Reflexao, Pensamento
 from converte import convert_to_bytes
+from urllib.parse import urlparse
+
+
+def lerbanco(site):
+    print(site)
+    try:
+        comics = Comics.get(Comics.site_name == f'{site}').get()
+        print(comics.seletor_link)
+        return comics.seletor_link, comics.seletor_img_1, comics.seletor_img_2
+    except:
+        Sg.PopupError('Site não está Cadastrado')
+
+
+def procurando_next(link):
+    def not_lacie(href):
+        return href and re.compile("page").search(href)
+    with httpx.Client() as client:
+        response = client.get(link)
+        soup = BeautifulSoup(response.text, 'html5lib')
+        texto = soup.find_all(href=not_lacie)
+        return texto[-1].get('href')
+
 
 
 def main():
@@ -46,7 +69,6 @@ while True:
 
     elif event == '1':
         janela_foto = foto_to_pdf()
-        print(janela_foto.get_screen_dimensions())
     elif event == '2':
         janela_video = video_download()
 
@@ -65,6 +87,45 @@ while True:
     elif event == 'baixar_video':
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
+    elif event == 'baixar_revista':
+        base = urlparse(values['url-site'])
+
+        url_ = ''
+
+        try:
+            sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
+            for p in range(1, int(values['n_pag']) + 1):
+                if p == 1:
+                    url = values['url-site']
+                    url_ = url
+                else:
+                    page = procurando_next(url_)
+                    url_ = page
+
+                janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
+        except:
+            print('Cheguei até aqui')
+
+    elif event == 'save_db':
+        Comics.create(
+            site_name=values['lsite'],
+            seletor_link=values['lurl1'],
+            seletor_img_1=values['limg1'],
+            seletor_img_2=values['limg2']
+        )
+        janela_conf['lsite'].update('')
+        janela_conf['lurl1'].update('')
+        janela_conf['limg1'].update('')
+        janela_conf['limg2'].update('')
+        Sg.Popup('Cadastro realizado', auto_close=True)
+
+    elif janela_registro:
+        v_base = []
+        with open('historico.csv') as csvfile:
+            for x in csv.reader(csvfile):
+                if x:
+                    v_base.append(x)
+        janela_registro['-TABLE-'].Update(values=v_base)
 
     elif event == 'Download':
         if values['t_frase'] == '':
@@ -72,9 +133,8 @@ while True:
         else:
             frase_de_reflexao(values['t_frase'])
             janela_reflexao['complete'].update('Download Realizado com Sucesso')
-    if janela_reflexao:
-        if event.startswith('list_tema'):
-            janela_reflexao['t_frase'].update(values['list_tema'])
+    elif event.startswith('list_tema'):
+        janela_reflexao['t_frase'].update(values['list_tema'])
 
 
 
