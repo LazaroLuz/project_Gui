@@ -1,20 +1,23 @@
+from random import choice, choices
+
 import PySimpleGUI as Sg
 from converte import convert_to_bytes
 
 
-DarkGrey8 = {'BACKGROUND': '#19232D',
-              'TEXT': '#ffffff',
-              'INPUT': '#32414B',
-              'TEXT_INPUT': '#ffffff',
-              'SCROLL': '#505F69',
-              'BUTTON': ('#ffffff', '#32414B'),
-              'PROGRESS': ('#505F69', '#32414B'),
-              'BORDER': 1, 'SLIDER_DEPTH': 2, 'PROGRESS_DEPTH': 2,
-              }
+# DarkGrey8 = {'BACKGROUND': '#19232D',
+#               'TEXT': '#ffffff',
+#               'INPUT': '#32414B',
+#               'TEXT_INPUT': '#ffffff',
+#               'SCROLL': '#505F69',
+#               'BUTTON': ('#ffffff', '#32414B'),
+#               'PROGRESS': ('#505F69', '#32414B'),
+#               'BORDER': 1, 'SLIDER_DEPTH': 2, 'PROGRESS_DEPTH': 2,
+#               }
+#
+# Sg.theme_add_new('DarkGrey8', DarkGrey8)
+from models import Reflexao, Pensamento
 
-Sg.theme_add_new('DarkGrey8', DarkGrey8)
-
-Sg.theme('DarkGrey8')
+Sg.theme('HotDogStand')
 
 
 def foto_to_pdf():
@@ -34,9 +37,10 @@ def foto_to_pdf():
             [Sg.Im(size=(400, 600), key='capa')]
         ]), Sg.Im(data=convert_to_bytes('icones/setas.png', (80, 80))), Sg.Frame('', [
             [Sg.Im(size=(400, 600), key='revista')]
-        ])]
+        ])],
+        [Sg.T('', k='m_mostra')]
     ]
-    return Sg.Window('', layout, finalize=True, location=(0, 0))
+    return Sg.Window('', layout, finalize=True, location=(0, 0), resizable=True)
 
 
 def video_download():
@@ -65,7 +69,7 @@ def relogio():
         [Sg.T('', key='data', font='Any 18')]
     ]
 
-    return Sg.Window('Horas e Data', layout, finalize=True, location=(959, 0))
+    return Sg.Window('Horas e Data', layout, finalize=True, location=(959, 0), resizable=True)
 
 
 def registro():
@@ -90,10 +94,20 @@ def registro():
                      # enable_click_events=True,  # Comment out to not enable header and other clicks
                      tooltip='Registro de Download')],
     ]
-    return Sg.Window('', layout, finalize=True, location=(959, 614))
+    return Sg.Window('', layout, finalize=True, location=(959, 614), resizable=True)
+
+
+def pegarfrase():
+    r = [t.tema for t in Reflexao.select()]
+    ale = choices(r, k=len(r) - 1)
+    n = choice(ale)
+    tf = [i.texto for i in Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{n}')]
+
+    return n, choice(tf)
 
 
 def reflexao():
+    tit, frase = pegarfrase()
     temas_site = [
         'Frases de Pensadores Importantes', 'Mensagens de Reflexão', 'Frases de Motivação', 'Frases Curtas',
     'Frases de Vida', 'Frases de Amizade', 'Frases Inteligentes', 'Frases para Refletir', 'Frases Curtas de Sabedoria',
@@ -101,7 +115,8 @@ def reflexao():
     ]
     title = 'Reflexão'
     Frase = [
-        [Sg.Push(), Sg.T('', size=(40, 20), justification='c', font='Any 14', key='frase'), Sg.Push()],
+        [Sg.Push(), Sg.T(tit, justification='c', font='Any 14', key='tt_frase'), Sg.Push()],
+        [Sg.Push(), Sg.T(frase, size=(40, 20), pad=(1,2), justification='c', font='Any 14', key='frase'), Sg.Push()],
         [Sg.VPush()],
         [Sg.Push(), Sg.B('Reflexão'), Sg.Push()]
     ]

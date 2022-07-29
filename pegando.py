@@ -1,16 +1,20 @@
 import time
 import sched
 from models import Comics, Reflexao, Pensamento
-from random import randint
+from random import randint, choice, choices
 import schedule
 
 
 def pegarfrase():
     r = [t.tema for t in Reflexao.select()]
-    n = randint(0, len(r)-1)
-    t = Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{r[n]}')
-    n2 = randint(0, len(t)-1)
-    print(t[n2].texto)
+    ale = choices(r, k=len(r)-1)
+    n = choice(ale)
+    tf = [i.texto for i in Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{n}')]
+    # n2 = randint(0, len(tf)-1)
+    print(ale)
+    print(r)
+    print(n)
+    print(choice(tf))
 
 
 # schedule.every(10).minutes.do(pegarfrase)
@@ -40,9 +44,21 @@ def pegarfrase():
 # # second event with delay of
 # # 2 seconds
 # e1 = scheduler.enter(5, 2, pegarfrase)
-#
-# # executing the events
+# #
+# # # executing the events
 # scheduler.run()
 
-comics = Comics.select().where(Comics.site_name == "https://hqerotico.com/").get()
-print(comics.seletor_link)
+# comics = Comics.select().where(Comics.site_name == "https://hqerotico.com/").get()
+# print(comics.seletor_link)
+import datetime
+
+
+
+while True:
+    now = datetime.datetime.now().second
+    time.sleep(1)
+    if now == 00:
+        pegarfrase()
+    else:
+        print(now)
+

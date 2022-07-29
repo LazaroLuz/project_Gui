@@ -29,12 +29,31 @@ def procurando_next(link):
         return texto[-1].get('href')
 
 
-def pegarfrase():
-    r = [t.tema for t in Reflexao.select()]
-    n = randint(0, len(r)-1)
-    t = Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{r[n]}')
-    n2 = randint(0, len(t)-1)
-    return t[n2].texto
+# def pegarfrase():
+#     r = [t.tema for t in Reflexao.select()]
+#     n = randint(0, len(r)-1)
+#     t = Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{r[n]}')
+#     n2 = randint(0, len(t)-1)
+#     return t[n2].texto
+def chamada_de_revista():
+    janela_foto['baixar_revista'].update(disabled=True)
+    base = urlparse(values['url-site'])
+    url_ = ''
+    try:
+        sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
+        for p in range(1, int(values['n_pag']) + 1):
+            if p == 1:
+                url = values['url-site']
+                url_ = url
+            else:
+                page = procurando_next(url_)
+                url_ = page
+
+            janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
+            # coremain(janela_foto, url_, sel_li, sel_im)
+    except:
+        Sg.popup_error('Ocorreu um erro')
+        janela_foto['baixar_revista'].update(disabled=False)
 
 
 def main():
@@ -104,23 +123,25 @@ while True:
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
-        janela_foto['baixar_revista'].update(disabled=True)
-        base = urlparse(values['url-site'])
-        url_ = ''
-        try:
-            sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
-            for p in range(1, int(values['n_pag']) + 1):
-                if p == 1:
-                    url = values['url-site']
-                    url_ = url
-                else:
-                    page = procurando_next(url_)
-                    url_ = page
-
-                janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
-        except:
-            Sg.popup_error('Ocorreu um erro')
-            janela_foto['baixar_revista'].update(disabled=False)
+        janela_foto.perform_long_operation(lambda: coremain(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
+        # janela_foto.perform_long_operation(chamada_de_revista, 'Chamada')
+        # janela_foto['baixar_revista'].update(disabled=True)
+        # base = urlparse(values['url-site'])
+        # url_ = ''
+        # try:
+        #     sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
+        #     for p in range(1, int(values['n_pag']) + 1):
+        #         if p == 1:
+        #             url = values['url-site']
+        #             url_ = url
+        #         else:
+        #             page = procurando_next(url_)
+        #             url_ = page
+        #
+        #         janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
+        # except:
+        #     Sg.popup_error('Ocorreu um erro')
+        #     janela_foto['baixar_revista'].update(disabled=False)
 
     elif event == 'save_db':
         Comics.create(
@@ -157,7 +178,8 @@ while True:
         janela_reflexao['t_frase'].update(values['list_tema'])
 
     elif event == 'Reflexão':
-        p = pegarfrase()
+        t, p = pegarfrase()
+        janela_reflexao['tt_frase'].update(t)
         janela_reflexao['frase'].update(p)
 
     if janela_relogio:
