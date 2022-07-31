@@ -23,7 +23,7 @@ Sg.theme('HotDogStand')
 def foto_to_pdf():
     title = 'Foto Para Pdf'
     layout =[
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Frame('', [
             [
                 Sg.T('Coloque a Url: '),
@@ -46,7 +46,7 @@ def foto_to_pdf():
 def video_download():
     title = 'Download Video'
     layout = [
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Frame('', [
             [
                 Sg.T('Coloque a Url: '),
@@ -64,7 +64,7 @@ def video_download():
 def relogio():
     title = 'Relogio'
     layout =[
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.Text('', key='horas', font='Any 33'), Sg.Push()],
         [Sg.T('', key='data', font='Any 18')]
     ]
@@ -76,7 +76,7 @@ def registro():
     headings = ['Site download', 'Nome do Arquivo', 'horas']
     title = 'Registros de Downloads'
     layout = [
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [
             Sg.Table(values=[], headings=headings,
                      auto_size_columns=True,
@@ -130,7 +130,7 @@ def reflexao():
     ]
 
     layout = [
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.TabGroup([[Sg.Tab('Reflexão', Frase), Sg.Tab('Frase do Site', Conf_frase)]])]
 
     ]
@@ -140,7 +140,7 @@ def reflexao():
 def save_config():
     title = 'Configuração dos Sites'
     layout = [
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [Sg.Push(), Sg.T('Add Site ao Banco de Dados'), Sg.Push()],
         [Sg.T('Site '), Sg.In(key='lsite')],
         [Sg.T('Url 1'), Sg.In(key='lurl1')],

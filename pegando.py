@@ -7,7 +7,7 @@ import schedule
 
 def pegarfrase():
     r = [t.tema for t in Reflexao.select()]
-    ale = choices(r, k=len(r)-1)
+    ale = choices(r, k=len(r) - 1)
     n = choice(ale)
     tf = [i.texto for i in Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{n}')]
     # n2 = randint(0, len(tf)-1)
@@ -50,15 +50,25 @@ def pegarfrase():
 
 # comics = Comics.select().where(Comics.site_name == "https://hqerotico.com/").get()
 # print(comics.seletor_link)
-import datetime
+# import datetime
+#
+#
+#
+# while True:
+#     now = datetime.datetime.now().second
+#     time.sleep(1)
+#     if now == 00:
+#         pegarfrase()
+#     else:
+#         print(now)
 
+test_list = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
+x = int(len(test_list)/2)
 
-while True:
-    now = datetime.datetime.now().second
-    time.sleep(1)
-    if now == 00:
-        pegarfrase()
-    else:
-        print(now)
+final_list = lambda test_list, x: [test_list[i:i + x] for i in range(0, len(test_list), x)]
 
+output = final_list(test_list, x)
+
+print('The Final List is:', output[0])
+print('The Final List is:', output[1])

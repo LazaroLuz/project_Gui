@@ -11,22 +11,22 @@ from converte import convert_to_bytes
 from urllib.parse import urlparse
 
 
-def lerbanco(site):
-    try:
-        comics = Comics.select().where(Comics.site_name == f'{site}').get()
-        return comics.seletor_link, comics.seletor_img_1, comics.seletor_img_2
-    except:
-        Sg.PopupError('Site não está Cadastrado')
+# def lerbanco(site):
+#     try:
+#         comics = Comics.select().where(Comics.site_name == f'{site}').get()
+#         return comics.seletor_link, comics.seletor_img_1, comics.seletor_img_2
+#     except:
+#         Sg.PopupError('Site não está Cadastrado')
 
 
-def procurando_next(link):
-    def not_lacie(href):
-        return href and re.compile("page").search(href)
-    with httpx.Client() as client:
-        response = client.get(link)
-        soup = BeautifulSoup(response.text, 'html5lib')
-        texto = soup.find_all(href=not_lacie)
-        return texto[-1].get('href')
+# def procurando_next(link):
+#     def not_lacie(href):
+#         return href and re.compile("page").search(href)
+#     with httpx.Client() as client:
+#         response = client.get(link)
+#         soup = BeautifulSoup(response.text, 'html5lib')
+#         texto = soup.find_all(href=not_lacie)
+#         return texto[-1].get('href')
 
 
 # def pegarfrase():
@@ -35,31 +35,31 @@ def procurando_next(link):
 #     t = Pensamento.select().join(Reflexao).where(Reflexao.tema == f'{r[n]}')
 #     n2 = randint(0, len(t)-1)
 #     return t[n2].texto
-def chamada_de_revista():
-    janela_foto['baixar_revista'].update(disabled=True)
-    base = urlparse(values['url-site'])
-    url_ = ''
-    try:
-        sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
-        for p in range(1, int(values['n_pag']) + 1):
-            if p == 1:
-                url = values['url-site']
-                url_ = url
-            else:
-                page = procurando_next(url_)
-                url_ = page
-
-            janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
-            # coremain(janela_foto, url_, sel_li, sel_im)
-    except:
-        Sg.popup_error('Ocorreu um erro')
-        janela_foto['baixar_revista'].update(disabled=False)
+# def chamada_de_revista():
+#     janela_foto['baixar_revista'].update(disabled=True)
+#     base = urlparse(values['url-site'])
+#     url_ = ''
+#     try:
+#         sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
+#         for p in range(1, int(values['n_pag']) + 1):
+#             if p == 1:
+#                 url = values['url-site']
+#                 url_ = url
+#             else:
+#                 page = procurando_next(url_)
+#                 url_ = page
+#
+#             janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
+#             # coremain(janela_foto, url_, sel_li, sel_im)
+#     except:
+#         Sg.popup_error('Ocorreu um erro')
+#         janela_foto['baixar_revista'].update(disabled=False)
 
 
 def main():
     title = 'Menu Inicial'
     layout =[
-        [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
+        # [Sg.Titlebar(title, Sg.CUSTOM_TITLEBAR_ICON)],
         [
             Sg.Btn('', image_data=convert_to_bytes('icones/f_pdf.png', (60, 60)), key='1', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/Video_down.webp', (60, 60)), key='2', pad=(0, 0)),
@@ -74,6 +74,8 @@ def main():
 
 
 janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf = main(), None, None, None, None, None, None
+janela.bind('<Configure>', "Configure")
+
 
 while True:
     windows, event, values = Sg.read_all_windows(timeout=1000)
@@ -119,29 +121,31 @@ while True:
         if not janela_conf:
             janela_conf = save_config()
 
+    elif event == 'Configure':
+        if janela.TKroot.state() == 'zoomed':
+            janela['1'].update(image_data=convert_to_bytes('icones/f_pdf.png', (250, 200)))
+            janela['2'].update(image_data=convert_to_bytes('icones/Video_down.webp', (250, 200)))
+            janela['3'].update(image_data=convert_to_bytes('icones/relogio.png', (250, 200)))
+            janela['4'].update(image_data=convert_to_bytes('icones/registro.png', (250, 200)))
+            janela['5'].update(image_data=convert_to_bytes('icones/reflexao.png', (250, 200)))
+            janela['6'].update(image_data=convert_to_bytes('icones/config.png', (250, 200)))
+            janela['sair'].update(image_data=convert_to_bytes('icones/sair.png', (250, 200)))
+    #         # image.update(data=converte.convert_to_bytes(r.content, (300, 300)))
+        else:
+            janela['1'].update(image_data=convert_to_bytes('icones/f_pdf.png', (60, 60)))
+            janela['2'].update(image_data=convert_to_bytes('icones/Video_down.webp', (60, 60)))
+            janela['3'].update(image_data=convert_to_bytes('icones/relogio.png', (60, 60)))
+            janela['4'].update(image_data=convert_to_bytes('icones/registro.png', (60, 60)))
+            janela['5'].update(image_data=convert_to_bytes('icones/reflexao.png', (60, 60)))
+            janela['6'].update(image_data=convert_to_bytes('icones/config.png', (60, 60)))
+            janela['sair'].update(image_data=convert_to_bytes('icones/sair.png', (60, 60)))
+            # image.update(data=converte.convert_to_bytes('icones/relogio.png', (100, 100)))
+
     elif event == 'baixar_video':
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
-        janela_foto.perform_long_operation(lambda: coremain(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
-        # janela_foto.perform_long_operation(chamada_de_revista, 'Chamada')
-        # janela_foto['baixar_revista'].update(disabled=True)
-        # base = urlparse(values['url-site'])
-        # url_ = ''
-        # try:
-        #     sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
-        #     for p in range(1, int(values['n_pag']) + 1):
-        #         if p == 1:
-        #             url = values['url-site']
-        #             url_ = url
-        #         else:
-        #             page = procurando_next(url_)
-        #             url_ = page
-        #
-        #         janela_foto.perform_long_operation(lambda: coremain(janela_foto, url_, sel_li, sel_im), 'Comics')
-        # except:
-        #     Sg.popup_error('Ocorreu um erro')
-        #     janela_foto['baixar_revista'].update(disabled=False)
+        janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
 
     elif event == 'save_db':
         Comics.create(
