@@ -29,9 +29,9 @@ def lerbanco(site):
         print('Site não está Cadastrado')
 
 
-def procurando_next(link):
+def procurando_next(link, n):
     def not_lacie(href):
-        return href and re.compile("page").search(href)
+        return href and re.compile(f"/{n}").search(href)
     with httpx.Client() as client:
         response = client.get(link)
         soup = BeautifulSoup(response.text, 'html5lib')
@@ -51,7 +51,7 @@ async def coremain(janela, urlinit, valor):
                     url = urlinit
                     url_ = url
                 else:
-                    page = procurando_next(url_)
+                    page = procurando_next(url_, p)
                     url_ = page
                 janela['m_mostra'].update(url_)
                 response = await client.get(url_, timeout=None)
@@ -133,6 +133,7 @@ async def coremain(janela, urlinit, valor):
     janela['capa'].update('', size=(400, 600))
     janela['revista'].update('', size=(400, 600))
     janela['baixar_revista'].update(disabled=False)
+    janela['url-site'].update('')
     janela['titulo'].update('')
 
 
