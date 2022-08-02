@@ -21,17 +21,21 @@ def tratar_texto(txt: str) -> str:
     return txt.strip().rstrip()
 
 
-def lerbanco(site):
+def lerbanco(janela, site):
     try:
         comics = Comics.select().where(Comics.site_name == f'{site}').get()
         return comics.seletor_link, comics.seletor_img_1, comics.seletor_img_2
     except:
-        print('Site não está Cadastrado')
+        janela['capa'].update('', size=(400, 600))
+        janela['revista'].update('', size=(400, 600))
+        janela['baixar_revista'].update(disabled=False)
+        janela['url-site'].update('')
+        janela['titulo'].update('')
 
 
 def procurando_next(link, n):
     def not_lacie(href):
-        return href and re.compile(f"/{n}").search(href)
+        return href and re.compile(f"/{n}/").search(href)
     with httpx.Client() as client:
         response = client.get(link)
         soup = BeautifulSoup(response.text, 'html5lib')
@@ -43,7 +47,7 @@ async def coremain(janela, urlinit, valor):
     janela['baixar_revista'].update(disabled=True)
     base = urlparse(urlinit)
     url_ = ''
-    sel_li, sel_im, sel_im2 = lerbanco(f'{base.scheme}://{base.netloc}/')
+    sel_li, sel_im, sel_im2 = lerbanco(janela, f'{base.scheme}://{base.netloc}/')
     try:
         async with httpx.AsyncClient() as client:
             for p in range(1, valor + 1):

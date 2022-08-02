@@ -7,10 +7,6 @@ from bs4 import BeautifulSoup as BS
 
 import converte
 
-url_x = 'https://www.xvideos.com/video63347751/madrasta_precisa_de_ajuda_para_tirar_fotos_sujas_-_brianna_beach_-_mamae_vem_primeiro_-_alex_adams'
-url_nx = 'https://www.xnxx.com/video-z6vqxa5/petite_ebony_chanel_skye_faz_anal_depois_da_massagem'
-url_p = 'https://pt.pornhub.com/view_video.php?viewkey=ph5f483ea43bcb5'
-
 
 def down(name, urls):
     ydl_opts = {
@@ -41,5 +37,7 @@ def download_videos(janela, url):
             down(js['name'], js['contentUrl'])
     except KeyError:
         down(js['name'], js['embedUrl'])
+    janela['baixar_video'].update(disabled=False)
+    janela['url-site'].update('')
 
 

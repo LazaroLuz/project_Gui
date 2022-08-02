@@ -74,7 +74,6 @@ def main():
 
 
 janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf = main(), None, None, None, None, None, None
-janela.bind('<Configure>', "Configure")
 
 
 while True:
@@ -121,27 +120,8 @@ while True:
         if not janela_conf:
             janela_conf = save_config()
 
-    elif event == 'Configure':
-        if janela.TKroot.state() == 'zoomed':
-            janela['1'].update(image_data=convert_to_bytes('icones/f_pdf.png', (250, 200)))
-            janela['2'].update(image_data=convert_to_bytes('icones/Video_down.webp', (250, 200)))
-            janela['3'].update(image_data=convert_to_bytes('icones/relogio.png', (250, 200)))
-            janela['4'].update(image_data=convert_to_bytes('icones/registro.png', (250, 200)))
-            janela['5'].update(image_data=convert_to_bytes('icones/reflexao.png', (250, 200)))
-            janela['6'].update(image_data=convert_to_bytes('icones/config.png', (250, 200)))
-            janela['sair'].update(image_data=convert_to_bytes('icones/sair.png', (250, 200)))
-    #         # image.update(data=converte.convert_to_bytes(r.content, (300, 300)))
-        else:
-            janela['1'].update(image_data=convert_to_bytes('icones/f_pdf.png', (60, 60)))
-            janela['2'].update(image_data=convert_to_bytes('icones/Video_down.webp', (60, 60)))
-            janela['3'].update(image_data=convert_to_bytes('icones/relogio.png', (60, 60)))
-            janela['4'].update(image_data=convert_to_bytes('icones/registro.png', (60, 60)))
-            janela['5'].update(image_data=convert_to_bytes('icones/reflexao.png', (60, 60)))
-            janela['6'].update(image_data=convert_to_bytes('icones/config.png', (60, 60)))
-            janela['sair'].update(image_data=convert_to_bytes('icones/sair.png', (60, 60)))
-            # image.update(data=converte.convert_to_bytes('icones/relogio.png', (100, 100)))
-
     elif event == 'baixar_video':
+        janela_video['baixar_video'].update(disabled=True)
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':

@@ -17,7 +17,7 @@ from converte import convert_to_bytes
 # Sg.theme_add_new('DarkGrey8', DarkGrey8)
 from models import Reflexao, Pensamento
 
-Sg.theme('HotDogStand')
+Sg.theme('random')
 
 
 def foto_to_pdf():
