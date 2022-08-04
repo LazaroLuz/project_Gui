@@ -35,7 +35,7 @@ def foto_to_pdf():
         [Sg.T('', key='titulo', font='Any 20', text_color='#ffffff'), Sg.Push(), Sg.T('', key='titulo2', font='Any 20', text_color='#ffffff')],
         [Sg.Frame('', [
             [Sg.Im(size=(400, 600), key='capa')]
-        ]), Sg.Im(data=convert_to_bytes('icones/setas.png', (80, 80))), Sg.Frame('', [
+        ]), Sg.Im(data=convert_to_bytes('icones/maiormenor.png', (80, 80))), Sg.Frame('', [
             [Sg.Im(size=(400, 600), key='revista')]
         ])],
         [Sg.T('', k='m_mostra')]
