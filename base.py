@@ -164,7 +164,7 @@ def clima():
     ])
     layout = [
         [Sg.T(key='clima')],
-        [Sg.T(key='temp', font='Any 38')],
+        [Sg.T(key='temp', font='Any 38'), Sg.Push(), Sg.Im(convert_to_bytes('icones/tempo/semi-circulo-rosa.webp', (140, 100)))],
         [
             Sg.T(key='sens'),
             Sg.Push(),
