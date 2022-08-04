@@ -32,7 +32,7 @@ def foto_to_pdf():
             ],
             [Sg.T('Numero de Pagínas'), Sg.Spin(values=[i for i in range(1, 150)], initial_value=1, size=(6, 1), key='n_pag')]
         ], expand_x=True)],
-        [Sg.Push(), Sg.T('', key='titulo', font='Any 20', text_color='#ffffff'), Sg.Push()],
+        [Sg.T('', key='titulo', font='Any 20', text_color='#ffffff'), Sg.Push(), Sg.T('', key='titulo2', font='Any 20', text_color='#ffffff')],
         [Sg.Frame('', [
             [Sg.Im(size=(400, 600), key='capa')]
         ]), Sg.Im(data=convert_to_bytes('icones/setas.png', (80, 80))), Sg.Frame('', [
@@ -108,11 +108,7 @@ def pegarfrase():
 
 def reflexao():
     tit, frase = pegarfrase()
-    temas_site = [
-        'Frases de Pensadores Importantes', 'Mensagens de Reflexão', 'Frases de Motivação', 'Frases Curtas',
-    'Frases de Vida', 'Frases de Amizade', 'Frases Inteligentes', 'Frases para Refletir', 'Frases Curtas de Sabedoria',
-    'Provérbio Chinês de Sabedoria', 'Sexo', 'Ousadia', 'Ódio', 'Frases de Quem Sou Eu'
-    ]
+    temas_site = [t.tema for t in Reflexao.select()]
     title = 'Reflexão'
     Frase = [
         [Sg.Push(), Sg.T(tit, justification='c', font='Any 14', key='tt_frase'), Sg.Push()],
@@ -149,3 +145,33 @@ def save_config():
         [Sg.Push(), Sg.B('', image_data=convert_to_bytes('icones/save_db.jpg', (40, 40)), key='save_db'), Sg.Push()]
     ]
     return Sg.Window('', layout, finalize=True, location=(1474, 447))
+
+
+def clima():
+    col1 = Sg.Col([
+        [Sg.Im('icones/tempo/Temperature.png'), Sg.T('Max/Min'), Sg.Push(), Sg.T(key='maxmin')],
+        [Sg.Im('icones/tempo/Humidity.png'), Sg.T('Umidade'), Sg.Push(), Sg.T(key='umidade')],
+        [Sg.Im('icones/tempo/Pressure.png'), Sg.T('Pressão'), Sg.Push(), Sg.T(key='pressao')],
+        [Sg.Im(convert_to_bytes('icones/tempo/Visibility.png', (24, 24))), Sg.T('Vísibilidade'), Sg.Push(),
+            Sg.T(key='visib')]
+    ])
+    col2 = Sg.Col([
+        [Sg.Im('icones/tempo/Wind.png'), Sg.T('Vento'), Sg.Push(), Sg.T(key='vento')],
+        [Sg.Im('icones/tempo/Dew Point.png'), Sg.T('P. de Orvalho'), Sg.Push(), Sg.T(key='p_orv')],
+        [Sg.Im('icones/tempo/UV Level.png'), Sg.T('Indice UV'), Sg.Push(), Sg.T(key='uv')],
+        [Sg.Im('icones/tempo/Moon Phase.png'), Sg.T('Fase da Lua'), Sg.Push(),
+            Sg.T(key='f_lua')]
+    ])
+    layout = [
+        [Sg.T(key='clima')],
+        [Sg.T(key='temp', font='Any 38')],
+        [
+            Sg.T(key='sens'),
+            Sg.Push(),
+            Sg.Im(filename='icones/tempo/Sun Rise.png'),
+            Sg.T(key='nasce'),
+            Sg.Im(filename='icones/tempo/Sunset.png'),
+            Sg.T(key='morre')],
+        [col1,col2]
+    ]
+    return Sg.Window('Clima e Tempo', layout, finalize=True)

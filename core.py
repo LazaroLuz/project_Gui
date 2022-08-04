@@ -41,6 +41,7 @@
 # window.close()
 import asyncio
 import os
+import re
 import threading
 import time
 
@@ -138,23 +139,44 @@ import converte
 #
 #
 # window.close()
-
-def dividir():
+def procurando_next(link, n):
+    def not_lacie(href):
+        return href and re.compile(f"/{n}/").search(href)
     with httpx.Client() as client:
-        response = client.get('https://hqerotico.com/')
+        response = client.get(link)
         soup = BeautifulSoup(response.text, 'html5lib')
-        links = soup.select('li > div.thumb-conteudo a')
-        tir = [link.get('href') for link in links]
-        x = int(len(links) / 2)
+        texto = soup.find_all(href=not_lacie)
+        return texto[-1].get('href')
+
+
+def dividir(urlinit , valor):
+    url_ = ''
+    tir: list = []
+    with httpx.Client() as client:
+        for p in range(1, valor + 1):
+            if p == 1:
+                url = urlinit
+                url_ = url
+            else:
+                page = procurando_next(url_, p)
+                url_ = page
+            response = client.get(url_, timeout=None)
+            soup = BeautifulSoup(response.text, 'html5lib')
+            links = soup.select('li > div.thumb-conteudo a')
+            for link in links:
+                tir.append(link.get('href'))
+            print(len(tir))
+        x = int(len(tir) / 2)
         final_list = lambda test_list, x: [test_list[i:i + x] for i in range(0, len(test_list), x)]
         output = final_list(tir, x)
+        print(len(output[0]), len(output[1]))
         return output[0], output[1]
 
 
 # li > a > img
 async def function_asyc(janela, list_link1):
     for ll in list_link1:
-        await asyncio.sleep(0.03)
+        await asyncio.sleep(0.01)
         res = httpx.get(ll)
         soup = BeautifulSoup(res.text, 'html5lib')
         imgs = soup.select('li > a > img')
@@ -172,7 +194,7 @@ async def function_asyc(janela, list_link1):
 
 async def function_2(janela, list_link2):
     for ll in list_link2:
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.01)
         res = httpx.get(ll)
         soup = BeautifulSoup(res.text, 'html5lib')
         imgs = soup.select('li > a > img')
@@ -196,10 +218,10 @@ async def function_2(janela, list_link2):
 #     f1.join()
 #     f2.join()
 async def main(janela):
-    l1, l2 = dividir()
+    l1, l2 = dividir('https://hqerotico.com/', 5)
     await asyncio.gather(
         function_asyc(janela, l1),
-        function_2(janela, l2)
+        function_2(janela, l2), return_exceptions=False
     )
     # await function_asyc(janela, l1)
     # await function_2(janela, l2)

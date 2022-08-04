@@ -64,6 +64,7 @@ def main():
             Sg.Btn('', image_data=convert_to_bytes('icones/f_pdf.png', (60, 60)), key='1', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/Video_down.webp', (60, 60)), key='2', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/relogio.png', (60, 60)), key='3', pad=(0, 0)),
+            Sg.Btn('', image_data=convert_to_bytes('icones/climatempo.png', (60, 60)), key='7', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/registro.png', (60, 60)), key='4', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/reflexao.png', (60, 60)), key='5', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/config.png', (60, 60)), key='6', pad=(0, 0)),
@@ -73,7 +74,7 @@ def main():
     return Sg.Window('Projeto', layout, keep_on_top=True, finalize=True, location=(0, 773))
 
 
-janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf = main(), None, None, None, None, None, None
+janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf, janela_clima = main(), None, None, None, None, None, None, None
 
 
 while True:
@@ -95,6 +96,8 @@ while True:
             janela_reflexao = None
         elif windows == janela_conf:
             janela_conf = None
+        elif windows == janela_clima:
+            janela_clima = None
 
     elif event == '1':
         if not janela_foto:
@@ -120,12 +123,19 @@ while True:
         if not janela_conf:
             janela_conf = save_config()
 
+    elif event == '7':
+            if not janela_clima:
+                janela_clima = clima()
+
     elif event == 'baixar_video':
+
         janela_video['baixar_video'].update(disabled=True)
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
-        janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
+
+        # janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
+        janela_foto.perform_long_operation(lambda: chamada(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
 
     elif event == 'save_db':
         Comics.create(
@@ -150,6 +160,23 @@ while True:
             janela_registro['-TABLE-'].Update(values=v_base)
         except FileNotFoundError:
             pass
+
+    elif janela_clima:
+        title, temp, sen_ter, nascer, morrer, max_min, vento, umid, p_orv, pressao, uv, visib, f_lua = clima_tempo()
+        janela_clima['clima'].update(title)
+        janela_clima['temp'].update(temp)
+        janela_clima['sens'].update(sen_ter)
+        janela_clima['nasce'].update(nascer)
+        janela_clima['morre'].update(morrer)
+        janela_clima['maxmin'].update(max_min)
+        janela_clima['vento'].update(vento)
+        janela_clima['umidade'].update(umid)
+        janela_clima['p_orv'].update(p_orv)
+        janela_clima['pressao'].update(pressao)
+        janela_clima['uv'].update(uv)
+        janela_clima['visib'].update(visib)
+        janela_clima['f_lua'].update(f_lua)
+
 
     elif event == 'Download':
         if values['t_frase'] == '':
