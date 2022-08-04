@@ -72,7 +72,7 @@ def tratar_texto(txt: str) -> str:
 
 async def core1(janela, links, sel_im):
     base = urlparse(links[0])
-    await asyncio.sleep(0.01)
+    await asyncio.sleep(0.03)
     try:
         async with httpx.AsyncClient() as client:
             for link in links:
@@ -136,7 +136,7 @@ async def core1(janela, links, sel_im):
 
 async def core2(janela, links, sel_im):
     base = urlparse(links[0])
-    await asyncio.sleep(0.01)
+    await asyncio.sleep(0.04)
     try:
         async with httpx.AsyncClient() as client:
             for link in links:
