@@ -133,9 +133,13 @@ while True:
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
-
+        if values['url-site']:
+            janela_foto.perform_long_operation(lambda: chamada(janela_foto, values['url-site'], int(values['n_pag'])),
+                                               'Comics')
+        else:
+            Sg.popup('A Url não pode esta vazio!!!')
         # janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
-        janela_foto.perform_long_operation(lambda: chamada(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
+
 
     elif event == 'save_db':
         Comics.create(

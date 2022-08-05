@@ -70,7 +70,7 @@ def tratar_texto(txt: str) -> str:
     return txt.strip().rstrip()
 
 
-async def core1(janela, links, sel_im):
+async def core1(janela, links, sel_im, sel_im2):
     base = urlparse(links[0])
     await asyncio.sleep(0.03)
     try:
@@ -81,7 +81,13 @@ async def core1(janela, links, sel_im):
                 photos = []
                 res = await client.get(link, timeout=None)
                 sp = BeautifulSoup(res.text, 'html5lib')
-                fotos = sp.select(sel_im)
+                album1 = sp.select(sel_im)
+
+                if album1:
+                    fotos = album1
+                else:
+                    album2 = sp.select(sel_im2)
+                    fotos = album2
                 if fotos:
                     texto = sp.select_one('h1').text
                     txt = tratar_texto(texto)
@@ -134,7 +140,7 @@ async def core1(janela, links, sel_im):
         pass
 
 
-async def core2(janela, links, sel_im):
+async def core2(janela, links, sel_im, sel_im2):
     base = urlparse(links[0])
     await asyncio.sleep(0.04)
     try:
@@ -145,7 +151,13 @@ async def core2(janela, links, sel_im):
                 photos = []
                 res = await client.get(link, timeout=None)
                 sp = BeautifulSoup(res.text, 'html5lib')
-                fotos = sp.select(sel_im)
+                album1 = sp.select(sel_im)
+
+                if album1:
+                    fotos = album1
+                else:
+                    album2 = sp.select(sel_im2)
+                    fotos = album2
                 if fotos:
                     texto = sp.select_one('h1').text
                     txt = tratar_texto(texto)
@@ -204,8 +216,8 @@ async def main(janela, n_link, n):
     l1, l2, im, im2 = dividir(janela, n_link, n)
 
     await asyncio.gather(
-        core1(janela, l1, im),
-        core2(janela, l2, im), return_exceptions=False
+        core1(janela, l1, im, im2),
+        core2(janela, l2, im, im2), return_exceptions=False
     )
     janela['capa'].update('', size=(400, 600))
     janela['revista'].update('', size=(400, 600))
