@@ -13,7 +13,8 @@ from .pdf_pil import Pdf
 from urllib.parse import urlparse
 import os
 
-
+# loop = asyncio.new_event_loop()
+# asyncio.set_event_loop(loop)
 def lerbanco(janela, site):
     try:
         comics = Comics.select().where(Comics.site_name == f'{site}').get()
@@ -36,35 +37,53 @@ def procurando_next(link, n):
         return texto[-1].get('href')
 
 
+def create_sublists(big_list, sublist_size):
+    qty_el = len(big_list)
+
+    for i in range(0, qty_el, int(len(big_list)/ sublist_size)):
+        # Create an index range for l of n items:
+        yield big_list[i:i + int(len(big_list)/ sublist_size)]
+
+
 def dividir(janela, urlinit , valor):
     janela['baixar_revista'].update(disabled=True)
     base = urlparse(urlinit)
+    print(base)
     url_ = ''
-    sel_li, sel_im, sel_im2 = lerbanco(janela, f'{base.scheme}://{base.netloc}/')
-
     tir: list = []
-    with httpx.Client() as client:
-        for p in range(1, valor + 1):
-            if p == 1:
-                url = urlinit
-                url_ = url
-            else:
-                page = procurando_next(url_, p)
-                url_ = page
-            response = client.get(url_, timeout=None)
-            soup = BeautifulSoup(response.text, 'html5lib')
-            links = soup.select(sel_li)
-            for link in links:
-                if base.netloc in link.get('href'):
-                    tir.append(link.get('href'))
-    x = int(len(tir) / 2)
-    final_list = lambda test_list, x: [test_list[i:i + x] for i in range(0, len(test_list), x)]
-    output = final_list(tir, x)
-    return output[0], output[1], sel_im, sel_im2
+    try:
+        sel_li, sel_im, sel_im2 = lerbanco(janela, f'{base.scheme}://{base.netloc}/')
+        with httpx.Client() as client:
+            for p in range(1, valor + 1):
+                if p == 1:
+                    url = urlinit
+                    url_ = url
+                else:
+                    page = procurando_next(url_, p)
+                    url_ = page
+                response = client.get(url_, timeout=None)
+                soup = BeautifulSoup(response.text, 'html5lib')
+                links = soup.select(sel_li)
+                for link in links:
+                    if base.netloc in link.get('href'):
+                        tir.append(link.get('href'))
+                    else:
+                        continue
+        # x = int(len(tir) / 2)
+        # print(x)
+        # final_list = lambda test_list, x: [test_list[i:i + x] for i in range(0, len(test_list), x)]
+        # output = final_list(tir, x)
+        # print(output)
+        x1 = create_sublists(tir, 2)
+        output = [i for i in x1]
+        return output[0], output[1], sel_im, sel_im2
+    except:
+        print('Ocorreu algum erro')
+
 
 
 def tratar_texto(txt: str) -> str:
-    ignore = "!@#$?:;',"
+    ignore = r"!@#$?:;',/\\"
     for char in ignore:
         txt = txt.replace(char, "")
     return txt.strip().rstrip()
@@ -225,9 +244,10 @@ async def main(janela, n_link, n):
     janela['url-site'].update('')
     janela['titulo2'].update('')
     janela['titulo'].update('')
-
+    # loop.close()
 
 
 def chamada(janela,n_link, n):
     # asyncio.run(main(janela))
+
     asyncio.run(main(janela, n_link, n))

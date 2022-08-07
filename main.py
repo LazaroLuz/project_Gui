@@ -133,9 +133,10 @@ while True:
         janela_video.perform_long_operation(lambda: download_videos(janela_video, values['url-site']), 'Video')
 
     elif event == 'baixar_revista':
+        # chamada(janela_foto, values['url-site'], int(values['n_pag']))
         if values['url-site']:
             janela_foto.perform_long_operation(lambda: chamada(janela_foto, values['url-site'], int(values['n_pag'])),
-                                               'Comics')
+                                                'Comics')
         else:
             Sg.popup('A Url não pode esta vazio!!!')
         # janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
@@ -164,6 +165,8 @@ while True:
             janela_registro['-TABLE-'].Update(values=v_base)
         except FileNotFoundError:
             pass
+    elif event.startswith('-TABLE-'):
+        print(values['-TABLE-'][0])
 
     elif janela_clima:
         title, temp, sen_ter, nascer, morrer, max_min, vento, umid, p_orv, pressao, uv, visib, f_lua = clima_tempo()

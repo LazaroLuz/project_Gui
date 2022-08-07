@@ -30,7 +30,9 @@ def foto_to_pdf():
                 Sg.In(key='url-site', expand_x=True),
                 Sg.B(image_data=convert_to_bytes('icones/download.png', (40, 50)), key='baixar_revista')
             ],
-            [Sg.T('Numero de Pagínas'), Sg.Spin(values=[i for i in range(1, 150)], initial_value=1, size=(6, 1), key='n_pag'), Sg.Combo(values=[i.site_name for i in Comics.select()]) ]
+            [
+                Sg.T('Numero de Pagínas'),
+                Sg.Spin(values=[i for i in range(1, 150)], initial_value=1, size=(6, 1), key='n_pag')]
         ], expand_x=True)],
         [Sg.T('', key='titulo', font='Any 20', text_color='#ffffff'), Sg.Push(), Sg.T('', key='titulo2', font='Any 20', text_color='#ffffff')],
         [Sg.Frame('', [
