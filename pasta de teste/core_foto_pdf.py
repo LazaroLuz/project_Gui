@@ -90,21 +90,12 @@ def create_sublists(big_list, sublist_size):
         yield big_list[i:i + int(len(big_list)/ sublist_size)]
 
 
-# https://hqerotico.com/
-# li > div.thumb-conteudo a
-# https://www.quadrinhoseroticos.blog/
-# div.cn-list > article > div.border > figure a
 
-lista = maintest('https://hqerotico.com/', 'li > div.thumb-conteudo a')
-blog = maintest('https://www.quadrinhoseroticos.blog/', 'div.cn-list > article > div.border > figure a')
-
-x1 = create_sublists(lista, 2)
-x2 = create_sublists(blog, 2)
-lista2 = [b for b in x1]
-l = [c for c in x2]
-print(len(lista2))
-print(len(lista2[0]))
-print(len(lista2[1]))
-print(len(l[0]))
-print(len(l[1]))
-
+url = urlparse('https://www.quadrinhoseroticos.blog/page/6/')
+if url.path != '/':
+    number = url.path.split('/')[-2]
+else:
+    number = 1
+valor = 3
+for i in range(int(number), int(number) + valor+1):
+    print(i)

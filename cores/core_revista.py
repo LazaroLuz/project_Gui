@@ -48,17 +48,22 @@ def create_sublists(big_list, sublist_size):
 def dividir(janela, urlinit , valor):
     janela['baixar_revista'].update(disabled=True)
     base = urlparse(urlinit)
-    print(base)
+    if base.path != '/':
+        number = base.path.split('/')[-2]
+    else:
+        number = 1
     url_ = ''
     tir: list = []
     try:
         sel_li, sel_im, sel_im2 = lerbanco(janela, f'{base.scheme}://{base.netloc}/')
         with httpx.Client() as client:
-            for p in range(1, valor + 1):
+            for p in range(int(number), int(number) + valor):
                 if p == 1:
                     url = urlinit
                     url_ = url
                 else:
+                    if int(number) > 1:
+                        url_ = urlinit
                     page = procurando_next(url_, p)
                     url_ = page
                 response = client.get(url_, timeout=None)
@@ -69,11 +74,6 @@ def dividir(janela, urlinit , valor):
                         tir.append(link.get('href'))
                     else:
                         continue
-        # x = int(len(tir) / 2)
-        # print(x)
-        # final_list = lambda test_list, x: [test_list[i:i + x] for i in range(0, len(test_list), x)]
-        # output = final_list(tir, x)
-        # print(output)
         x1 = create_sublists(tir, 2)
         output = [i for i in x1]
         return output[0], output[1], sel_im, sel_im2
@@ -196,7 +196,6 @@ async def core2(janela, links, sel_im, sel_im2):
                                     comic = foto.get('href')
                                 else:
                                     comic = foto.get('data-src')
-                                print(comic)
                                 photos.append(os.path.basename(comic))
                                 r = await client.get(comic, timeout=None)
                                 janela['revista'].update(data=converte.convert_to_bytes(r.content, (400, 600)))
@@ -247,7 +246,7 @@ async def main(janela, n_link, n):
     # loop.close()
 
 
-def chamada(janela,n_link, n):
+def chamada(janela, n_link, n):
     # asyncio.run(main(janela))
 
     asyncio.run(main(janela, n_link, n))
