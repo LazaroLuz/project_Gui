@@ -45,7 +45,7 @@ while True:  # Event Loop
         print('Button 2 clicked')
     elif event == '-3-':
         print('Button 3 clicked')
-    elif event == 'Colar':
-        window['Control_L'] + window['v']
+    elif event in ('Colar', 'v:86'):
+        window['-IN-'].update()
 
 window.close()

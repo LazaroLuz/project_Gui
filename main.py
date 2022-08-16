@@ -1,14 +1,10 @@
-import datetime
 import locale
-import sched
-import time
-from random import randint
-
+import requests
 from cores import *
 from base import *
-from models import Comics, Reflexao, Pensamento
+from models import Comics
 from converte import convert_to_bytes
-from urllib.parse import urlparse
+from twilio.rest import Client
 
 
 # def lerbanco(site):
@@ -68,13 +64,14 @@ def main():
             Sg.Btn('', image_data=convert_to_bytes('icones/registro.png', (60, 60)), key='4', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/reflexao.png', (60, 60)), key='5', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/config.png', (60, 60)), key='6', pad=(0, 0)),
+            Sg.Btn('', image_data=convert_to_bytes('icones/whatzapp.png', (60, 60)), key='8', pad=(0, 0)),
             Sg.Btn('', image_data=convert_to_bytes('icones/sair.png', (60, 60)), key='sair', pad=(0, 0))
         ]
     ]
     return Sg.Window('Projeto', layout, keep_on_top=True, finalize=True, location=(0, 773))
 
 
-janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf, janela_clima = main(), None, None, None, None, None, None, None
+janela, janela_foto, janela_video, janela_relogio, janela_registro, janela_reflexao, janela_conf, janela_clima, janela_whatsapp = main(), None, None, None, None, None, None, None, None
 
 
 while True:
@@ -98,6 +95,8 @@ while True:
             janela_conf = None
         elif windows == janela_clima:
             janela_clima = None
+        elif windows == janela_whatsapp:
+            janela_whatsapp = None
 
     elif event == '1':
         if not janela_foto:
@@ -127,6 +126,9 @@ while True:
             if not janela_clima:
                 janela_clima = clima()
 
+    elif event == '8' and not janela_whatsapp:
+        janela_whatsapp = whatsapp()
+
     elif event == 'baixar_video':
 
         janela_video['baixar_video'].update(disabled=True)
@@ -139,7 +141,16 @@ while True:
                                                 'Comics')
         else:
             Sg.popup('A Url não pode esta vazio!!!')
-        # janela_foto.perform_long_operation(lambda: asi(janela_foto, values['url-site'], int(values['n_pag'])), 'Comics')
+
+    elif event == 'Enviar':
+        account_sid = os.environ['TWILIO_ACCOUNT_SID']
+        auth_token = os.environ['TWILIO_AUTH_TOKEN']
+        client = Client(account_sid, auth_token)
+        message = client.messages.create(
+            from_='whatsapp:+14155238886',
+            body=f'{values["-Mensagem-"]}',
+            to=f'whatsapp:+55{values["-Number-"]}'
+        )
 
 
     elif event == 'save_db':

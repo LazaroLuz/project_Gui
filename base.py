@@ -177,3 +177,14 @@ def clima():
         [col1,col2]
     ]
     return Sg.Window('Clima e Tempo', layout, finalize=True)
+
+
+def whatsapp():
+    layout = [
+        [Sg.Push(), Sg.Im(data=convert_to_bytes('icones/whatsapp.webp', (100, 150))), Sg.Push()],
+        [Sg.T('Digite o DDD + Numero'), Sg.In(size=(20, 1), key='-Number-')],
+        [Sg.Multiline(size=(40, 10), key='-Mensagem-', expand_x=True)],
+        [Sg.B('Enviar')]
+    ]
+
+    return Sg.Window('Whatsapp', layout, finalize=True)
