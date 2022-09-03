@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup  # type: ignore
 
 import converte
 from models import Comics
-from .pdf_pil import Pdf
+from .pdf_pil import Pdf, pdf
 from urllib.parse import urlparse
 import os
 
@@ -133,7 +133,8 @@ async def core1(janela, links, sel_im, sel_im2):
                                     ft.write(r.content)
                             with open('historico.csv', 'a+') as csvfile:
                                 csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}://{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                            Pdf(f'{base.netloc}/{txt}', txt, photos)
+                            # Pdf(f'{base.netloc}/{txt}', txt, photos)
+                            await asyncio.gather(pdf(f'{base.netloc}', f'{base.netloc}/{txt}', txt, photos))
                             shutil.rmtree(f'{base.netloc}/{txt}')
                     except FileNotFoundError:
                         os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
@@ -151,7 +152,8 @@ async def core1(janela, links, sel_im, sel_im2):
                                 ft.write(r.content)
                         with open('historico.csv', 'a+') as csvfile:
                             csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}://{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                        Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        # Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        await asyncio.gather(pdf(f'{base.netloc}', f'{base.netloc}/{txt}', txt, photos))
                         shutil.rmtree(f'{base.netloc}/{txt}')
                 else:
                     continue
@@ -203,7 +205,8 @@ async def core2(janela, links, sel_im, sel_im2):
                                     ft.write(r.content)
                             with open('historico.csv', 'a+') as csvfile:
                                 csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}://{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                            Pdf(f'{base.netloc}/{txt}', txt, photos)
+                            # Pdf(f'{base.netloc}/{txt}', txt, photos)
+                            await asyncio.gather(pdf(f'{base.netloc}', f'{base.netloc}/{txt}', txt, photos))
                             shutil.rmtree(f'{base.netloc}/{txt}')
                     except FileNotFoundError:
                         os.makedirs(f'{base.netloc}/{txt}', exist_ok=True)
@@ -221,7 +224,8 @@ async def core2(janela, links, sel_im, sel_im2):
                                 ft.write(r.content)
                         with open('historico.csv', 'a+') as csvfile:
                             csv.writer(csvfile, delimiter=',').writerow([f'{base.scheme}://{base.netloc}{base.path}', f'{txt}', f'{horas}'])
-                        Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        # Pdf(f'{base.netloc}/{txt}', txt, photos)
+                        await asyncio.gather(pdf(f'{base.netloc}', f'{base.netloc}/{txt}', txt, photos))
                         shutil.rmtree(f'{base.netloc}/{txt}')
                 else:
                     continue

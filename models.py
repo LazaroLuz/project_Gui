@@ -1,6 +1,6 @@
 # models.py
 
-import peewee
+import peewee  # type: ignore
 
 # Criamos o banco de dados
 db = peewee.SqliteDatabase('P_gui.db')
