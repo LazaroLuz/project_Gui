@@ -42,7 +42,7 @@ def foto_to_pdf():
         ])],
         [Sg.T('', k='m_mostra')]
     ]
-    return Sg.Window('', layout, finalize=True, location=(0, 0), resizable=True)
+    return Sg.Window(title, layout, finalize=True, location=(0, 0), resizable=True)
 
 
 def video_download():
@@ -181,7 +181,7 @@ def clima():
 
 def whatsapp():
     layout = [
-        [Sg.Push(), Sg.Im(data=convert_to_bytes('icones/whatsapp.webp', (100, 150))), Sg.Push()],
+        [Sg.Push(), Sg.Im(data=convert_to_bytes('icones/whatzapp.png', (100, 150))), Sg.Push()],
         [Sg.T('Digite o DDD + Numero'), Sg.In(size=(20, 1), key='-Number-')],
         [Sg.Multiline(size=(40, 10), key='-Mensagem-', expand_x=True)],
         [Sg.B('Enviar')]

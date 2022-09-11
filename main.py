@@ -1,5 +1,4 @@
 import locale
-import requests
 from cores import *
 from base import *
 from models import Comics

@@ -32,7 +32,7 @@ class Quadrinho(BaseModel):
     Classe que representa a tabela Author
     """
     # A tabela possui apenas o campo 'name', que receberá o nome do autor sera unico
-    name = peewee.CharField()
+    name = peewee.CharField(unique=True)
 
 
 class Imagens(BaseModel):

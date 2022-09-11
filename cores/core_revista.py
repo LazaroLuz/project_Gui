@@ -48,7 +48,8 @@ def create_sublists(big_list, sublist_size):
 def dividir(janela, urlinit , valor):
     janela['baixar_revista'].update(disabled=True)
     base = urlparse(urlinit)
-    if base.path != '/':
+    print(base)
+    if base.path:
         number = base.path.split('/')[-2]
     else:
         number = 1
